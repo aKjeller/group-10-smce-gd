@@ -39,6 +39,12 @@ onready var start_btn: Button = $PaddingBox2/SketchButtons/Start
 onready var reset_pos_btn: Button = $PaddingBox/VehicleButtons/Reset
 onready var follow_btn: Button = $PaddingBox/VehicleButtons/Follow
 
+onready var teleport_btn: Button = $PaddingBox3/TeleportationButtons/Teleport
+onready var xPos: Node = $PaddingBox3/TeleportationButtons/Xpos
+onready var yPos: Node = $PaddingBox3/TeleportationButtons/Ypos
+onready var zPos: Node = $PaddingBox3/TeleportationButtons/Zpos
+ 
+
 onready var attachments = $Scroll/Attachments
 onready var attachments_empty = $Scroll/Attachments/empty
 
@@ -116,6 +122,8 @@ func _ready():
 	pause_btn.connect("pressed", self, "_on_pause")
 	start_btn.connect("pressed", self, "_on_start")
 	reset_pos_btn.connect("pressed", self, "_on_reset_pos")
+	teleport_btn.connect("pressed", self, "_on_teleport")
+	
 	follow_btn.connect("pressed", self, "_on_follow")
 	
 	
@@ -139,6 +147,7 @@ func _on_board_cleaned() -> void:
 	start_btn.disabled = true
 	pause_btn.disabled = true
 	reset_pos_btn.disabled = true
+	teleport_btn.disabled = true;
 	follow_btn.disabled = true
 	compile_btn.disabled = _toolchain.is_building()
 
@@ -184,6 +193,7 @@ func _on_board_started() -> void:
 	uart.console.text = ""	
 	pause_btn.disabled = false
 	reset_pos_btn.disabled = false
+	teleport_btn.disabled = false
 	start_btn.text = "Stop"
 	follow_btn.disabled = false
 
@@ -214,6 +224,7 @@ func _on_board_stopped(exit_code: int) -> void:
 	start_btn.text = "Start"
 	pause_btn.disabled = true
 	reset_pos_btn.disabled = true
+	teleport_btn.disabled = true
 	follow_btn.disabled = true
 	uart.disabled = true
 	
@@ -254,6 +265,9 @@ func _on_follow() -> void:
 
 func _on_reset_pos() -> void:
 	reset_vehicle_pos()
+
+func _on_teleport() -> void:
+	teleport_vehicle()
 
 
 func _on_start() -> void:
@@ -373,6 +387,19 @@ func reset_vehicle_pos() -> void:
 	var was_frozen = vehicle.frozen
 	vehicle.freeze()
 	vehicle.global_transform.origin = Vector3(0,3,0)
+	vehicle.global_transform.basis = Basis()
+	if ! was_frozen:
+		vehicle.unfreeze()
+
+func teleport_vehicle() -> void:
+	if !is_instance_valid(vehicle):
+		return
+	var was_frozen = vehicle.frozen
+	vehicle.freeze()
+	var x = xPos.get_text();
+	var y = yPos.get_text();
+	var z = zPos.get_text();
+	vehicle.global_transform.origin = Vector3(x,y,z)
 	vehicle.global_transform.basis = Basis()
 	if ! was_frozen:
 		vehicle.unfreeze()
