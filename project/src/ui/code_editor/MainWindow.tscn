@@ -1,0 +1,168 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://src/ui/code_editor/MainWindow.gd" type="Script" id=1]
+[ext_resource path="res://src/ui/code_editor/Tabs.gd" type="Script" id=2]
+[ext_resource path="res://src/ui/code_editor/FileTree.gd" type="Script" id=3]
+[ext_resource path="res://src/ui/code_editor/TextEditor.gd" type="Script" id=4]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1.05948
+margin_top = -1.05946
+margin_right = 1.05945
+margin_bottom = -1.05945
+color = Color( 0.12549, 0.12549, 0.12549, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Close" type="Button" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -50.0
+margin_top = 5.0
+margin_right = -5.0
+margin_bottom = 30.0
+text = "X"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DropDown" type="MenuButton" parent="."]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 100.0
+margin_bottom = 29.0
+text = "File"
+flat = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FileDialog" type="FileDialog" parent="."]
+anchor_left = 0.00215611
+anchor_right = 0.00215611
+margin_left = 107.635
+margin_top = 220.315
+margin_right = 677.635
+margin_bottom = 539.315
+window_title = "Open a File"
+resizable = true
+mode = 0
+access = 2
+current_dir = "/Users/Kjeller/Documents/dev/SMCE/group-10-smce-gd/project"
+current_path = "/Users/Kjeller/Documents/dev/SMCE/group-10-smce-gd/project/"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Compile" type="Button" parent="."]
+margin_left = 105.0
+margin_top = 5.0
+margin_right = 200.0
+margin_bottom = 29.0
+text = "Compile"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_top = 35.0
+margin_right = -5.0
+margin_bottom = -5.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FileTree" type="Tree" parent="HBoxContainer"]
+margin_right = 248.0
+margin_bottom = 680.0
+size_flags_horizontal = 3
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CollapseBtn" type="Button" parent="HBoxContainer"]
+margin_left = 252.0
+margin_right = 272.0
+margin_bottom = 680.0
+text = "<"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+margin_left = 276.0
+margin_right = 1270.0
+margin_bottom = 680.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+
+[node name="Tabs" type="Tabs" parent="HBoxContainer/VBoxContainer"]
+margin_right = 994.0
+margin_bottom = 30.0
+tab_align = 0
+tab_close_display_policy = 1
+scrolling_enabled = false
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextEditor" type="TextEdit" parent="HBoxContainer/VBoxContainer"]
+margin_top = 34.0
+margin_right = 994.0
+margin_bottom = 680.0
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LabelLineLimit" type="Label" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -185.739
+margin_top = 51.8284
+margin_right = -68.7388
+margin_bottom = 71.8284
+text = "Line length limit:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LineLimitField" type="LineEdit" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -66.6904
+margin_top = 46.6691
+margin_right = -8.69043
+margin_bottom = 76.6691
+hint_tooltip = "Values below 10 will be ignored"
+text = "80"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]
+[connection signal="button_pressed" from="HBoxContainer/FileTree" to="HBoxContainer/FileTree" method="_on_FileTree_button_pressed"]
+[connection signal="item_activated" from="HBoxContainer/FileTree" to="HBoxContainer/FileTree" method="_on_FileTree_item_activated"]
+[connection signal="pressed" from="HBoxContainer/CollapseBtn" to="." method="_on_Collapse_btn_pressed"]
+[connection signal="tab_changed" from="HBoxContainer/VBoxContainer/Tabs" to="HBoxContainer/VBoxContainer/Tabs" method="_on_Tabs_tab_changed"]
+[connection signal="tab_clicked" from="HBoxContainer/VBoxContainer/Tabs" to="HBoxContainer/VBoxContainer/Tabs" method="_on_Tabs_tab_clicked"]
+[connection signal="tab_close" from="HBoxContainer/VBoxContainer/Tabs" to="HBoxContainer/VBoxContainer/Tabs" method="_on_Tabs_tab_close"]
+[connection signal="text_changed" from="HBoxContainer/VBoxContainer/TextEditor" to="HBoxContainer/VBoxContainer/Tabs" method="_on_TextEditor_text_changed"]
